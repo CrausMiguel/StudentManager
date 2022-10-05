@@ -4,6 +4,10 @@ import com.api.gerenciador.dtos.UsuarioDTO;
 import com.api.gerenciador.models.FuncaoEnum;
 import com.api.gerenciador.models.UsuarioModel;
 import com.api.gerenciador.services.UsuarioService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/gerenciador")
+@Api("API dos usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -61,6 +66,12 @@ public class UsuarioController {
     }
 
     //Metodo para listar um usuario por ID
+
+    @ApiOperation("Obter dados de um usuario detalhadamente")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Cliente Encontrado"),
+            @ApiResponse(code = 404, message = "Cliente não encontrado")
+    })
     @GetMapping("/usuario/{codUsuario}")
     public ResponseEntity<Optional<UsuarioModel>> listarUsuarioPorId(@PathVariable Integer codUsuario){
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.getUsuarioById(codUsuario));
