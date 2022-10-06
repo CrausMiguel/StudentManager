@@ -21,6 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/gerenciador")
 @Api("API dos usuarios")
+@ApiOperation("Usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -29,6 +30,7 @@ public class UsuarioController {
     }
 
     //Metodo para criar usuario
+    @ApiOperation("Cadastrar usuario")
     @PostMapping("/usuario")
     public ResponseEntity<UsuarioModel> salvaUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
         var usuarioModel = new UsuarioModel();
@@ -39,6 +41,7 @@ public class UsuarioController {
     }
 
     //Metodo para deletar usuario
+    @ApiOperation("Deletar usuario especifico")
     @DeleteMapping("/usuario/{codUsuario}")
     public ResponseEntity<String> deletarUsuario (@PathVariable Integer codUsuario){
         usuarioService.deletarUsuario(codUsuario);
@@ -46,6 +49,7 @@ public class UsuarioController {
     }
 
     //Meotodo para atualizar usuario
+    @ApiOperation("Atualizar usuario especifico")
     @PutMapping("/usuario/{codUsuario}")
     public ResponseEntity<UsuarioModel> atualizarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO, @PathVariable Integer codUsuario) {
         var usuarioInformado = usuarioService.getUsuarioById(codUsuario);
@@ -60,6 +64,7 @@ public class UsuarioController {
     }
 
     //Metodo para listar todos usuarios
+    @ApiOperation("Obter lista detalhada de todos os usuarios")
     @GetMapping("/usuario")
     public ResponseEntity<List<UsuarioModel>> listarUsuarios(){
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.listarUsuarios());
@@ -67,11 +72,7 @@ public class UsuarioController {
 
     //Metodo para listar um usuario por ID
 
-    @ApiOperation("Obter dados de um usuario detalhadamente")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Cliente Encontrado"),
-            @ApiResponse(code = 404, message = "Cliente não encontrado")
-    })
+    @ApiOperation("Obter dados detalhados de um usuario especifico")
     @GetMapping("/usuario/{codUsuario}")
     public ResponseEntity<Optional<UsuarioModel>> listarUsuarioPorId(@PathVariable Integer codUsuario){
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.getUsuarioById(codUsuario));

@@ -3,6 +3,7 @@ package com.api.gerenciador.controllers;
 
 import com.api.gerenciador.dtos.TurmaDTO;
 import com.api.gerenciador.services.TurmaService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,18 +24,21 @@ public class TurmaController {
     private TurmaService turmaService;
 
     //Metodo para listar todas as Turmas
+    @ApiOperation("Obter listagem detalhada de todos os turmas")
     @GetMapping("/turma")
     public ResponseEntity<List<TurmaModel>> listarturma() {
         return ResponseEntity.status(HttpStatus.OK).body(turmaService.listarTurma());
     }
 
     //Metodo para listar turma por ID
+    @ApiOperation("Obter dados detalhados de uma turma especifico")
     @GetMapping("/turma/{codTurma}")
     public ResponseEntity<Optional<TurmaModel>> listarTurmaPorId(@PathVariable Integer codTurma) {
         return ResponseEntity.status(HttpStatus.OK).body(turmaService.getTurmaById(codTurma));
     }
 
     //Metodo para criar turma
+    @ApiOperation("Cadastrar uma turma")
     @PostMapping("/turma")
     public ResponseEntity<TurmaModel> salvaTurma(@RequestBody @Valid TurmaDTO turmaDTO) {
         var turmaModel = new TurmaModel();
@@ -43,12 +47,15 @@ public class TurmaController {
     }
 
     //Metodo para deletar turma
+    @ApiOperation("Deletar uma turma especifica")
     @DeleteMapping("/turma/{codTurma}")
     public ResponseEntity<String> deletarTurma(@PathVariable Integer codTurma) {
         turmaService.deletarTurma(codTurma);
         return ResponseEntity.status(HttpStatus.OK).body("Cliente deletado com sucesso");
     }
 
+    //Metodo para atualizar uma turma
+    @ApiOperation("Atualizar um usuario especifica")
     @PutMapping("/turma/{codTurma}")
     public ResponseEntity<TurmaModel> atualizarTurma(@PathVariable Integer codTurma, @RequestBody @Valid TurmaDTO turmaDTO){
        var turmaInformada = turmaService.getTurmaById(codTurma);
