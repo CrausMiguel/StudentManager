@@ -15,7 +15,7 @@ public interface NotaRepository extends JpaRepository<NotaModel, Integer> {
     public Optional<NotaModel> getNotasByMatricula(@Param("matricula")Integer codMatricula);
 
     @Query(value = "DELETE * FROM notas WHERE notas.matricula = :#{#matricula}",nativeQuery = true)
-    public void deleteNotaByMatricula(@Param("matricula") Integer codMatricula);
-    
+    public void deletarNotaByMatricula(@Param("matricula") Integer codMatricula);
+
 
 }

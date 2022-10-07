@@ -2,9 +2,11 @@ package com.api.gerenciador.controllers;
 
 import com.api.gerenciador.dtos.NotaDTO;
 import com.api.gerenciador.models.NotaModel;
-import com.api.gerenciador.services.MatriculaService;
 import com.api.gerenciador.services.NotaService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,41 +17,57 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/gerenciador")
+@Api(value = "Api de Nota", tags = "Notas", description = "Controlador de Notas")
 public class NotaController {
 
     final
     NotaService notaService;
-    MatriculaService matriculaService;
 
     public NotaController(NotaService notaService) {
         this.notaService = notaService;
     }
 
     //Metodo para listar todas as nota
-    @ApiOperation("Obter listagem detalhada de todos os cursos")
+    @ApiOperation("Obter listagem detalhada de todas as notas")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Notas encontradas"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @GetMapping("/nota")
-    public ResponseEntity<List<NotaModel>> listarCursos() {
+    public ResponseEntity<List<NotaModel>> listarNotas() {
         return ResponseEntity.status(HttpStatus.OK).body(notaService.listarNotas());
     }
 
     //Metodo para listar nota por ID
-    @ApiOperation("Obter uma lista detalhada de todas as notas")
+    @ApiOperation("Obter nota detalhada pelo ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Nota encontrada"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @GetMapping("/nota/{codNota}")
-    public ResponseEntity<Optional<NotaModel>> listarCursoPorId(@PathVariable Integer codNota) {
+    public ResponseEntity<Optional<NotaModel>> listarNotaPorId(@PathVariable Integer codNota) {
         return ResponseEntity.status(HttpStatus.OK).body(notaService.getNotaById(codNota));
     }
 
     //Metodo para listar nota por Matricula
-    @ApiOperation("Obter notas pelo numero da matricula")
+    @ApiOperation("Obter listagem de notas detalhadas pelo numero da matricula do aluno")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Nota encontrada"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @GetMapping("/nota/matricula/{codMatricula}")
-    public ResponseEntity<Optional<NotaModel>> listarCursoPorMatricula(@PathVariable Integer codMatricula) {
+    public ResponseEntity<Optional<NotaModel>> listarNotaByMatricula(@PathVariable Integer codMatricula) {
         return ResponseEntity.status(HttpStatus.OK).body(notaService.getNotasByMatricula(codMatricula));
     }
 
     //Metodo para criar nota
     @ApiOperation("Cadastrar uma nota")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Nota cadastrada"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @PostMapping("/nota")
-    public ResponseEntity<NotaModel> salvarCurso(@RequestBody @Valid NotaDTO notaDTO) {
+    public ResponseEntity<NotaModel> salvarNota(@RequestBody @Valid NotaDTO notaDTO) {
         var notaModel = new NotaModel();
         BeanUtils.copyProperties(notaDTO,notaModel); //Converte DTO para Model
         float notaFinal = (notaDTO.getNotaProvaUm()+notaDTO.getNotaProvaDois()+ notaDTO.getNotaProvaFinal())/3;
@@ -62,16 +80,36 @@ public class NotaController {
     }
 
     //Metodo para deletar nota
-    @ApiOperation("Deletar uma nota pelo codigo")
+    @ApiOperation("Deletar uma nota pelo ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Nota deletada"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @DeleteMapping("/nota/{codNota}")
-    public ResponseEntity<String> deletarCurso(@PathVariable Integer codNota) {
+    public ResponseEntity<Object> deletarNota(@PathVariable Integer codNota) {
         notaService.deletarNota(codNota);
-        return ResponseEntity.status(HttpStatus.OK).body("Nota deletada com sucesso");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @ApiOperation("Deletar uma nota por codigo de matricula do aluno")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Nota deletada"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
+    @DeleteMapping("/nota/matricula/{codMatricula}")
+    public ResponseEntity<Object> deletarNotaByMatricula(@PathVariable Integer codMatricula){
+        notaService.deletarNotaByMatricula(codMatricula);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     //Metodo para atualizar nota
-    @ApiOperation("Atualizar uma nota")
+    @ApiOperation("Atualizar uma nota pelo ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Nota atualizada"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @PutMapping("/nota/{codNota}")
-    public ResponseEntity<NotaModel> atualizarCurso(@PathVariable Integer codNota, @RequestBody @Valid NotaDTO notaDTO){
+    public ResponseEntity<NotaModel> atualizarNota(@PathVariable Integer codNota, @RequestBody @Valid NotaDTO notaDTO){
         var NotaInformado = notaService.getNotaById(codNota);
         if(NotaInformado.isPresent()){
             var notaModel = NotaInformado.get();

@@ -20,8 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/gerenciador")
-@Api("API dos usuarios")
-@ApiOperation("Usuarios")
+@Api(value = "API dos usuarios", tags = "Usuarios",description = "Controle de Usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -30,7 +29,11 @@ public class UsuarioController {
     }
 
     //Metodo para criar usuario
-    @ApiOperation("Cadastrar usuario")
+    @ApiOperation("Cadastrar um usuario")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Usuario cadastrado"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @PostMapping("/usuario")
     public ResponseEntity<UsuarioModel> salvaUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
         var usuarioModel = new UsuarioModel();
@@ -42,6 +45,10 @@ public class UsuarioController {
 
     //Metodo para deletar usuario
     @ApiOperation("Deletar usuario especifico")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Usuario deletado"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @DeleteMapping("/usuario/{codUsuario}")
     public ResponseEntity<String> deletarUsuario (@PathVariable Integer codUsuario){
         usuarioService.deletarUsuario(codUsuario);
@@ -50,6 +57,10 @@ public class UsuarioController {
 
     //Meotodo para atualizar usuario
     @ApiOperation("Atualizar usuario especifico")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Usuario atualizado"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @PutMapping("/usuario/{codUsuario}")
     public ResponseEntity<UsuarioModel> atualizarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO, @PathVariable Integer codUsuario) {
         var usuarioInformado = usuarioService.getUsuarioById(codUsuario);
@@ -64,15 +75,22 @@ public class UsuarioController {
     }
 
     //Metodo para listar todos usuarios
-    @ApiOperation("Obter lista detalhada de todos os usuarios")
+    @ApiOperation("Obter listagem detalhada de todos os usuarios")
     @GetMapping("/usuario")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Usuario encontrados"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     public ResponseEntity<List<UsuarioModel>> listarUsuarios(){
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.listarUsuarios());
     }
 
     //Metodo para listar um usuario por ID
-
     @ApiOperation("Obter dados detalhados de um usuario especifico")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Usuario encontrado"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @GetMapping("/usuario/{codUsuario}")
     public ResponseEntity<Optional<UsuarioModel>> listarUsuarioPorId(@PathVariable Integer codUsuario){
         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.getUsuarioById(codUsuario));

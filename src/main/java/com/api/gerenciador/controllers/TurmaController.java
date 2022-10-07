@@ -3,7 +3,10 @@ package com.api.gerenciador.controllers;
 
 import com.api.gerenciador.dtos.TurmaDTO;
 import com.api.gerenciador.services.TurmaService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,20 +21,29 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/gerenciador")
+@Api(value = "Api de Turmas", tags = "Turmas",description = "Controlador de Turmas")
 public class TurmaController {
 
     @Autowired
     private TurmaService turmaService;
 
     //Metodo para listar todas as Turmas
-    @ApiOperation("Obter listagem detalhada de todos os turmas")
+    @ApiOperation("Obter listagem detalhada de todas os turmas")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Turmas encontrados"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @GetMapping("/turma")
     public ResponseEntity<List<TurmaModel>> listarturma() {
         return ResponseEntity.status(HttpStatus.OK).body(turmaService.listarTurma());
     }
 
     //Metodo para listar turma por ID
-    @ApiOperation("Obter dados detalhados de uma turma especifico")
+    @ApiOperation("Obter dados detalhados de uma turma especifica")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Turma encontrado"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @GetMapping("/turma/{codTurma}")
     public ResponseEntity<Optional<TurmaModel>> listarTurmaPorId(@PathVariable Integer codTurma) {
         return ResponseEntity.status(HttpStatus.OK).body(turmaService.getTurmaById(codTurma));
@@ -39,6 +51,10 @@ public class TurmaController {
 
     //Metodo para criar turma
     @ApiOperation("Cadastrar uma turma")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Turma cadastrada"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @PostMapping("/turma")
     public ResponseEntity<TurmaModel> salvaTurma(@RequestBody @Valid TurmaDTO turmaDTO) {
         var turmaModel = new TurmaModel();
@@ -48,6 +64,10 @@ public class TurmaController {
 
     //Metodo para deletar turma
     @ApiOperation("Deletar uma turma especifica")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Turma encotrada"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @DeleteMapping("/turma/{codTurma}")
     public ResponseEntity<String> deletarTurma(@PathVariable Integer codTurma) {
         turmaService.deletarTurma(codTurma);
@@ -55,7 +75,11 @@ public class TurmaController {
     }
 
     //Metodo para atualizar uma turma
-    @ApiOperation("Atualizar um usuario especifica")
+    @ApiOperation("Atualizar um turma especifica")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Turma atualizada"),
+            @ApiResponse(code = 404, message = "Pagina não encontrada")
+    })
     @PutMapping("/turma/{codTurma}")
     public ResponseEntity<TurmaModel> atualizarTurma(@PathVariable Integer codTurma, @RequestBody @Valid TurmaDTO turmaDTO){
        var turmaInformada = turmaService.getTurmaById(codTurma);

@@ -43,6 +43,11 @@ public class NotaServiceImpl implements NotaService{
     }
 
     @Override
+    public void deletarNotaByMatricula(Integer codMatricula){
+        notaRepository.deletarNotaByMatricula(codMatricula);
+    }
+
+    @Override
     public NotaModel atualizarNota(NotaModel notaModel){
         return notaRepository.save(notaModel);
     }

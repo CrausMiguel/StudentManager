@@ -13,9 +13,11 @@ public interface NotaService {
 
     public Optional<NotaModel> getNotaById(Integer codNota);
 
+    public Optional<NotaModel> getNotasByMatricula(Integer codMatricula);
+
     public void deletarNota(Integer codNota);
 
-    public Optional<NotaModel> getNotasByMatricula(Integer codMatricula);
+    public void deletarNotaByMatricula(Integer codMatricula);
 
     public NotaModel atualizarNota(NotaModel notaModel);
 }
