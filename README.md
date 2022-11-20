@@ -1,4 +1,4 @@
 # GerenciadorDeAlunos
 
-Gerenciador basico escolar, com sistema de inserção de notas, registro de horarios e turmas!
-Construido utilizando POO em Java 11 com Springboot para backend e Swagger para documentação!
+API para gerenicmaneto basico escolar, com sistema de inserção de notas, registro de usuarios, horarios, cursos e turmas!
+Construido utilizando **Springboot WEB** para backend e **Swagger** para documentação!
